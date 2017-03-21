@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="e2aca695-2564-4a26-9f7d-5da643aa7e07" version="2.2.5" api-version="6.0.0" allowed-operations="evf" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Check PowerShell Module Exist]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="endpointServer" type="string"/>
+    <param name="endpointPassword" type="SecureString"/>
+    <param name="endpointUser" type="string"/>
+    <param name="packageName" type="string"/>
+    <param name="version" type="string"/>
+    <param name="packageType" type="string"/>
+  </input>
+  <attrib name="mountPath" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="errorCode" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item  name="item0" type="end" end-mode="0">
+    <position y="45.40909090909091" x="664.5"/>
+  </workflow-item >
+  <workflow-item  name="item2" out-name="item4" catch-name="item4" throw-bind-name="errorCode" type="task">
+    <display-name><![CDATA[Test]]></display-name>
+    <script encoded="false"><![CDATA[
+// Get the share for this package
+var branch = "master";
+var share = System.getModule("com.vmware.cse.clm.metadata").getMetadataProperty("share",packageName,packageType,version,branch);
+System.log("share=" +share);
+
+// Mount cifs share at mountPath
+var command = "mkdir -p " + mountPath + " && mount -rw -t cifs -o 'username=" + username + ",password=" + password + ",iocharset=utf8,file_mode=0777,dir_mode=077' '//" + System.resolveHostName(server) + "/" + share + "' " + mountPath;
+System.debug("Running command: " + command);
+
+
+// Mount cifs share at mountPath
+var result = System.getModule("com.vmware.cse.clm.utils").executeSSH(command,null,null);
+//System.debug("Result: " + result);
+
+// Test folder exists
+var result = System.getModule("com.vmware.cse.clm.utils").fileExistsSSH(mountPath,null);
+//System.debug("Result: " + result);
+
+if (result) {
+	System.log("Found folder '" + packageName + "' on server '" + server + "'");
+} else {
+	throw "Folder '" + packageName + "' does not exist on server '" + server + "'";
+}]]></script>
+    <in-binding>
+      <bind name="server" type="string" export-name="endpointServer"/>
+      <bind name="username" type="string" export-name="endpointUser"/>
+      <bind name="password" type="SecureString" export-name="endpointPassword"/>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+      <bind name="packageName" type="string" export-name="packageName"/>
+      <bind name="version" type="string" export-name="version"/>
+      <bind name="packageType" type="string" export-name="packageType"/>
+    </in-binding>
+    <out-binding/>
+    <position y="55.40909090909091" x="344.5"/>
+  </workflow-item >
+  <workflow-item  name="item3" out-name="item2" type="task">
+    <display-name><![CDATA[Initialize]]></display-name>
+    <script encoded="false"><![CDATA[var mountPath = "/tmp/" + workflow.name.replace(/ /g,"_") + System.getModule("com.vmware.cse.utils").generateGuid();
+System.log("PackageName: '" + packageName + "' mountPath: " + mountPath + "'");
+]]></script>
+    <in-binding>
+      <bind name="packageName" type="string" export-name="packageName"/>
+    </in-binding>
+    <out-binding>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+    </out-binding>
+    <position y="55.40909090909091" x="204.5"/>
+  </workflow-item >
+  <workflow-item  name="item4" out-name="item0" type="task">
+    <display-name><![CDATA[Cleanup]]></display-name>
+    <script encoded="false"><![CDATA[// Unmount mountPath
+var command = "umount " + mountPath + " && rmdir " + mountPath;
+//System.debug("Command: " + command);
+try {
+	var result = System.getModule("com.vmware.cse.clm.utils").executeSSH(command,null,null);
+	//System.debug("Result: " + result);
+} catch (e) {};
+
+if(errorCode && errorCode.length >0) {
+	throw errorCode;
+}
+]]></script>
+    <in-binding>
+      <bind name="errorCode" type="string" export-name="errorCode"/>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+    </in-binding>
+    <out-binding/>
+    <position y="55.40909090909091" x="484.5"/>
+  </workflow-item >
+  <presentation>
+    <p-param name="endpointServer">
+      <desc><![CDATA[endpointServer]]></desc>
+    </p-param>
+    <p-param name="endpointPassword">
+      <desc><![CDATA[endpointPassword]]></desc>
+    </p-param>
+    <p-param name="endpointUser">
+      <desc><![CDATA[endpointUser]]></desc>
+    </p-param>
+    <p-param name="packageName">
+      <desc><![CDATA[packageName]]></desc>
+    </p-param>
+    <p-param name="version">
+      <desc><![CDATA[version]]></desc>
+    </p-param>
+    <p-param name="packageType">
+      <desc><![CDATA[packageType]]></desc>
+    </p-param>
+  </presentation>
+</workflow>

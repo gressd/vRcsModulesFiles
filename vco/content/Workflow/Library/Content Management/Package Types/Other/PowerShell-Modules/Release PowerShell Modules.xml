@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item2" object-name="workflow:name=generic" id="2186bf77-80c6-424c-be9c-61323931efd9" version="2.2.8" api-version="6.0.0" allowed-operations="evf" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Release PowerShell Modules]]></display-name>
+  <position y="18.136363636363633" x="65.0"/>
+  <input>
+    <param name="files" type="Array/string"/>
+    <param name="importDir" type="string"/>
+    <param name="packageName" type="string"/>
+    <param name="releaseEndpoint" type="string"/>
+    <param name="packageType" type="string"/>
+    <param name="catalogRequestId" type="string"/>
+    <param name="packageId" type="string"/>
+    <param name="version" type="string"/>
+    <param name="stage" type="string"/>
+  </input>
+  <attrib name="server" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="username" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="password" type="SecureString" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="debugMode" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[false]]></value>
+  </attrib>
+  <attrib name="mountPath" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="errorCode" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="syncDelete" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item  name="item0" type="end" end-mode="0">
+    <position y="18.136363636363633" x="624.5"/>
+  </workflow-item >
+  <workflow-item  name="item1" out-name="item3" catch-name="item3" throw-bind-name="errorCode" type="task">
+    <display-name><![CDATA[Release]]></display-name>
+    <script encoded="false"><![CDATA[System.log("endPoint:" +endpoint);
+
+var windowsShares = System.getModule("com.vmware.cse.clm.configs").getValueFromResourceConfig(endpoint,"windowsShares");
+System.log("windowsShares:" +windowsShares);
+
+
+// Get the share for this package
+var branch = "master";
+var share = System.getModule("com.vmware.cse.clm.metadata").getMetadataProperty("share",packageName,packageType,version,branch);
+System.log("share=" +share);
+
+
+
+// Mount cifs share at mountPath
+var command = "mkdir -p " + mountPath + " && mount -rw -t cifs -o 'username=" + username + ",password=" + password + ",iocharset=utf8,file_mode=0777,dir_mode=077' '//" + System.resolveHostName(server) + "/" + share + "' " + mountPath;
+System.debug("Running command: " + command);
+
+var result = System.getModule("com.vmware.cse.clm.utils").executeSSH(command,null,endpoint);
+//System.debug("Result: " + result);
+
+var deleteCommand = ""
+if (syncDelete) {
+	var deleteCommand = "--delete "
+}
+
+// Sync directories in mountPath
+//var command = "rsync -av --omit-dir-times " + deleteCommand + exportDir + " '" + mountPath + "/" +packageName +"'";
+var command = "cp -rf " + exportDir +"/'" +packageName +"'" + " '" + mountPath +"'";
+System.debug("Running command: " + command);
+var result = System.getModule("com.vmware.cse.clm.utils").executeSSH(command,null,endpoint);
+System.debug("Result: " + result);
+]]></script>
+    <in-binding>
+      <bind name="endpoint" type="string" export-name="releaseEndpoint"/>
+      <bind name="packageType" type="string" export-name="packageType"/>
+      <bind name="server" type="string" export-name="server"/>
+      <bind name="username" type="string" export-name="username"/>
+      <bind name="password" type="SecureString" export-name="password"/>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+      <bind name="exportDir" type="string" export-name="importDir"/>
+      <bind name="packageName" type="string" export-name="packageName"/>
+      <bind name="catalogRequestId" type="string" export-name="catalogRequestId"/>
+      <bind name="packageId" type="string" export-name="packageId"/>
+      <bind name="version" type="string" export-name="version"/>
+      <bind name="stage" type="string" export-name="stage"/>
+      <bind name="files" type="Array/string" export-name="files"/>
+      <bind name="syncDelete" type="string" export-name="syncDelete"/>
+    </in-binding>
+    <out-binding/>
+    <position y="28.136363636363633" x="304.5"/>
+  </workflow-item >
+  <workflow-item  name="item2" out-name="item1" type="task">
+    <display-name><![CDATA[Initialize]]></display-name>
+    <script encoded="false"><![CDATA[// Endpoint Details
+var server   = System.getModule("com.vmware.cse.clm.configs").getValueFromResourceConfig(endpoint,"server");
+var username = System.getModule("com.vmware.cse.clm.configs").getValueFromResourceConfig(endpoint,"user");
+var password = System.getModule("com.vmware.cse.clm.configs").getValueFromResourceConfig(endpoint,"password");
+var syncDelete = System.getModule("com.vmware.cse.clm.configs").getValueFromResourceConfig(endpoint,"syncDelete");
+
+var debugMode = System.getModule("com.vmware.cse.clm.configs").getValueFromGlobalConfig("debugMode");
+
+var mountPath = "/tmp/" + workflow.name.replace(/ /g,"_") + "/" + endpoint + "/" + System.getModule("com.vmware.cse.utils").generateGuid();
+System.log("PackageName: '" + packageName + "' packageId: '" + packageId + "' mountPath: " + mountPath + "'");
+]]></script>
+    <in-binding>
+      <bind name="endpoint" type="string" export-name="releaseEndpoint"/>
+      <bind name="packageType" type="string" export-name="packageType"/>
+      <bind name="packageName" type="string" export-name="packageName"/>
+      <bind name="packageId" type="string" export-name="packageId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="server" type="string" export-name="server"/>
+      <bind name="username" type="string" export-name="username"/>
+      <bind name="password" type="SecureString" export-name="password"/>
+      <bind name="debugMode" type="boolean" export-name="debugMode"/>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+      <bind name="syncDelete" type="string" export-name="syncDelete"/>
+    </out-binding>
+    <position y="28.136363636363633" x="164.5"/>
+  </workflow-item >
+  <workflow-item  name="item3" out-name="item0" type="task">
+    <display-name><![CDATA[Cleanup]]></display-name>
+    <script encoded="false"><![CDATA[// Unmount mountPath
+var command = "umount " + mountPath + " && rmdir " + mountPath;
+//System.debug("Command: " + command);
+try {
+	var result = System.getModule("com.vmware.cse.clm.utils").executeSSH(command,null,null);
+	//System.debug("Result: " + result);
+} catch (e) {};
+
+if(errorCode && errorCode.length >0) {
+	throw errorCode;
+}
+]]></script>
+    <in-binding>
+      <bind name="errorCode" type="string" export-name="errorCode"/>
+      <bind name="mountPath" type="string" export-name="mountPath"/>
+      <bind name="endpoint" type="string" export-name="releaseEndpoint"/>
+    </in-binding>
+    <out-binding/>
+    <position y="28.136363636363633" x="444.5"/>
+  </workflow-item >
+  <presentation>
+    <p-param name="files">
+      <desc><![CDATA[files]]></desc>
+    </p-param>
+    <p-param name="importDir">
+      <desc><![CDATA[importDir]]></desc>
+    </p-param>
+    <p-param name="packageName">
+      <desc><![CDATA[packageName]]></desc>
+    </p-param>
+    <p-param name="releaseEndpoint">
+      <desc><![CDATA[releaseEndpoint]]></desc>
+    </p-param>
+    <p-param name="packageType">
+      <desc><![CDATA[packageType]]></desc>
+    </p-param>
+    <p-param name="catalogRequestId">
+      <desc><![CDATA[catalogRequestId]]></desc>
+    </p-param>
+    <p-param name="packageId">
+      <desc><![CDATA[packageId]]></desc>
+    </p-param>
+    <p-param name="version">
+      <desc><![CDATA[version]]></desc>
+    </p-param>
+    <p-param name="stage">
+      <desc><![CDATA[stage]]></desc>
+    </p-param>
+  </presentation>
+</workflow>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>UTF-16</comment>
+<entry key="categoryPath">Content Management Tests.PowerShell-Files.Common</entry>
+<entry key="name">Check PowerShell File Exist</entry>
+<entry key="type">Workflow</entry>
+<entry key="signature-owner">O=VMware,OU=Unknown,CN=vRO localhost 61a12223-b94e-46c8-9624-f486bf1503e2</entry>
+<entry key="id">8d7d7ef1-bd0c-47da-94c2-04fce996c9f7</entry>
+</properties>

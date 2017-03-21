@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>UTF-16</comment>
+<entry key="categoryPath">Library.Content Management.Package Types.Other.PowerShell-Files</entry>
+<entry key="name">Test Windows PowerShell Connection</entry>
+<entry key="type">Workflow</entry>
+<entry key="signature-owner">O=VMware,OU=Unknown,CN=vRO localhost 61a12223-b94e-46c8-9624-f486bf1503e2</entry>
+<entry key="id">b9ab0c42-b660-42b6-9ec1-586960eb968f</entry>
+</properties>

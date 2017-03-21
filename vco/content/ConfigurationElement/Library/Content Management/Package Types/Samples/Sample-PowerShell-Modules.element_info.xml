@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>UTF-16</comment>
+<entry key="categoryPath">Library.Content Management.Package Types.Samples</entry>
+<entry key="name">Sample-PowerShell-Modules</entry>
+<entry key="type">ConfigurationElement</entry>
+<entry key="signature-owner">O=VMware,OU=Unknown,CN=vRO localhost 61a12223-b94e-46c8-9624-f486bf1503e2</entry>
+<entry key="id">8cbb64fa-f74e-488a-a31f-d05dd73a3f93</entry>
+</properties>

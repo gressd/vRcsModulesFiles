@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>UTF-16</comment>
+<entry key="categoryPath">Library.Content Management.Package Types.Other.PowerShell-Modules</entry>
+<entry key="name">Capture PowerShell Modules</entry>
+<entry key="type">Workflow</entry>
+<entry key="signature-owner">O=VMware,OU=Unknown,CN=vRO localhost 61a12223-b94e-46c8-9624-f486bf1503e2</entry>
+<entry key="id">4ec7d860-5bff-472f-9698-e6d071f748ff</entry>
+</properties>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="54cdab0b-72c6-4e21-927a-b4c0ab0f53aa">
+  <display-name><![CDATA[Sample-PowerShell-Files]]></display-name>
+  <atts>
+    <att name="captureWF" type="Workflow" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/Workflow?id='0b2e4911-ddf2-4fdf-b912-36401e1a15ae'&dunesName='Workflow']]></value>
+    </att>
+    <att name="releaseWF" type="Workflow" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/Workflow?id='153a56b3-4849-40dd-9f6b-30c01ef7dea5'&dunesName='Workflow']]></value>
+    </att>
+    <att name="listSourceWF" type="Workflow" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/Workflow?id='f2034bc3-17fa-423c-ac13-8bad37d4c67e'&dunesName='Workflow']]></value>
+    </att>
+    <att name="maxWorkflows" type="number" read-only="false">
+      <value encoded="n"><![CDATA[2.0]]></value>
+    </att>
+    <att name="category" type="string" read-only="false">
+      <value encoded="n"><![CDATA[Other]]></value>
+    </att>
+    <att name="testConnectionWF" type="Workflow" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/Workflow?id='b9ab0c42-b660-42b6-9ec1-586960eb968f'&dunesName='Workflow']]></value>
+    </att>
+    <att name="maxTestVersions" type="number" read-only="false">
+      <value encoded="n"><![CDATA[25.0]]></value>
+    </att>
+    <att name="maxReleaseVersions" type="number" read-only="false">
+      <value encoded="n"><![CDATA[50.0]]></value>
+    </att>
+    <att name="delaySeconds" type="number" read-only="false">
+      <value encoded="n"><![CDATA[0.0]]></value>
+    </att>
+    <att name="pipelinestub_post_capture" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_post_release" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_post_rollback" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_post_test" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_pre_capture" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_pre_release" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_pre_rollback" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="pipelinestub_pre_test" type="boolean" read-only="false">
+      <value encoded="n"><![CDATA[false]]></value>
+    </att>
+    <att name="endpointConnectionType" type="Array/string" read-only="false">
+      <value encoded="n"><![CDATA[#{##}#]]></value>
+    </att>
+    <att name="storagePath" type="string" read-only="false">
+      <value encoded="n"><![CDATA[/storage/external]]></value>
+    </att>
+  </atts>
+</config-element>
